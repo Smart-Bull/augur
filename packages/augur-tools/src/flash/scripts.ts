@@ -2981,13 +2981,13 @@ export function addScripts(flash: FlashSession) {
       const now = await maker.getTimestamp();
       const oneWeek = new BigNumber(60 * 60 * 24 * 7);
 
+      const cashForMaker = price.times(amount).times(shares).times(1e18).times(takersCount);
       console.log(`Fauceting DAI for maker: ${cashForMaker.toFixed()}`);
-      const cashForTaker = price.times(amount).times(shares).times(1e18).times(2); // extra for fees
       await maker.faucetCash(cashForMaker);
       await maker.approve();
 
+      const cashForTaker = price.times(amount).times(shares).times(1e18).times(2); // extra for fees
       console.log(`Fauceting DAI for each taker: ${cashForTaker.toFixed()}`);
-      const cashForMaker = price.times(amount).times(shares).times(1e18).times(takersCount);
       await mapPromises(takers.map((taker) => async () => {
         console.log(`Taker: ${taker.account.address}`);
         await taker.faucetCash(cashForTaker);
